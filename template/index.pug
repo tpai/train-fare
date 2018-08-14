@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title Train Fare
+    link(href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet')
+    style
+      include ./styles.css
+  body
+    div
+      label(for="isRound") Is round?
+      input(type="checkbox" name="round" id="isRound")
+    div(id="interval")
+      span from
+      input(type="date" name="interval_start")
+      span to
+      input(type="date" name="interval_end")
+    div(id="round")
+      span from
+      input(type="date" name="round_start")
+      span to
+      input(type="date" name="round_end")
+    script
+      include ./index.js
