@@ -77,7 +77,7 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
       adult: JSON.parse(adult),
       child: JSON.parse(child),
       productClass: class_code === 'O' ? null : class_code,
-      classOfService: JSON.parse(service),
+      classOfService: service === 'null' ? null : service,
       promoCode: promo_code === '' ? null : promo_code,
     };
 
