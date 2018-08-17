@@ -1,4 +1,6 @@
 {
+  "alias": "",
+  "name": "",
   "env": {
     "API_ENDPOINT": "",
     "API_LOGIN_PATH": "",
