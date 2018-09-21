@@ -28,6 +28,7 @@ html
           select.ts.basic.dropdown(name="arrival" id="arrival")
             each ele in [{"value":"BC_","label":"Bologna"},{"value":"BLZ","label":"Bolzano"},{"value":"BSC","label":"Brescia"},{"value":"DSG","label":"Desenzano"},{"value":"F__","label":"Ferrara"},{"value":"SMN","label":"Firenze SMN"},{"value":"MI0","label":"Milano (Tutte)"},{"value":"MC_","label":"Milano Centrale"},{"value":"RRO","label":"Milano Rho Fiera"},{"value":"RG_","label":"Milano Rog"},{"value":"NAF","label":"Napoli Afragola"},{"value":"NAC","label":"Napoli C.le"},{"value":"PD_","label":"Padova"},{"value":"PSY","label":"Peschiera"},{"value":"AAV","label":"Reggio Emilia AV"},{"value":"RM0","label":"Roma (Tutte)"},{"value":"RMT","label":"Roma Termini"},{"value":"RTB","label":"Roma Tib"},{"value":"RVR","label":"Rovereto"},{"value":"R__","label":"Rovigo"},{"value":"SAL","label":"Salerno"},{"value":"TOP","label":"Torino P.Nuova"},{"value":"OUE","label":"Torino P.Susa"},{"value":"TCN","label":"Trento"},{"value":"VE0","label":"Venezia (Tutte)"},{"value":"VEM","label":"Venezia Mestre"},{"value":"VSL","label":"Venezia S.Lucia"},{"value":"VPN","label":"Verona P.N."},{"value":"VIC","label":"Vicenza"}]
               option(value=ele.value selected=ele.value == arrival) #{ele.label}
+        div.field
           div.ts.checkbox(id="round_trip")
             input(type="checkbox" name="is_round" id="is_round" checked=is_round=="true")
             label(for="is_round") Round Trip
@@ -46,6 +47,7 @@ html
           select.ts.basic.dropdown(name="child" id="child")
             each val in [0,1,2,3,4,5,6,7,8,9]
               option(value=val selected=val == child) #{val}
+        div.ts.separated.dropdowns.field
           div.divider Class
           select.ts.basic.dropdown(name="class" id="class")
             each ele in [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"}]
