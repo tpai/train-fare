@@ -83,7 +83,7 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
     result.innerHTML = 'Loading...';
 
-    fetch('/api/queryTrains', {
+    fetch('/api/getAvailableTrains', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

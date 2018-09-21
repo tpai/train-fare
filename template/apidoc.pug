@@ -1,0 +1,106 @@
+doctype html
+html
+  head
+    title API Document
+  body
+    pre
+      | POST /api/login
+      |
+      | Parameters {
+      |   username: String,
+      |   password: String,
+      | }
+      |
+      | Response {
+      |   Signature: String,
+      |   Customer: {
+      |     Name: String,
+      |     Surname: String,
+      |     Email: String,
+      |     PhoneNumber: String,
+      |     CustomerId: String,
+      |     LoyaltyPoints: Integer,
+      |     LoyaltyLevel: String,
+      |     CreditShell: Integer,
+      |     FopList: [{
+      |       FopId: Integer,
+      |       AccountNumber: String,
+      |       PaymentMethodeCode: String,
+      |       PaymentMethodeType: String,
+      |       AccountName: String,
+      |       Expiration: String,
+      |       AccountNumberId: Integer
+      |     }],
+      |     'RoleCode': String
+      |   }
+      | }
+      |
+      | POST /api/getAvailableTrains
+      |
+      | Parameters {
+      |   isRound: bool,
+      |   depart: enum([
+      |     "BC_", // Bologna
+      |     "BLZ", // Bolzano
+      |     "BSC", // Brescia
+      |     "DSG", // Desenzano
+      |     "F__", // Ferrara
+      |     "SMN", // Firenze SMN
+      |     "MI0", // Milano (Tutte)
+      |     "MC_", // Milano Centrale
+      |     "RRO", // Milano Rho Fiera
+      |     "RG_", // Milano Rog
+      |     "NAF", // Napoli Afragola
+      |     "NAC", // Napoli C.le
+      |     "PD_", // Padova
+      |     "PSY", // Peschiera
+      |     "AAV", // Reggio Emilia AV
+      |     "RM0", // Roma (Tutte)
+      |     "RMT", // Roma Termini
+      |     "RTB", // Roma Tib
+      |     "RVR", // Rovereto
+      |     "R__", // Rovigo
+      |     "SAL", // Salerno
+      |     "TOP", // Torino P.Nuova
+      |     "OUE", // Torino P.Susa
+      |     "TCN", // Trento
+      |     "VE0", // Venezia (Tutte)
+      |     "VEM", // Venezia Mestre
+      |     "VSL", // Venezia S.Lucia
+      |     "VPN", // Verona P.N.
+      |     "VIC", // Vicenza
+      |   ]),
+      |   arrival: SAME_AS_DEPART,
+      |   intervalStart: `/Date(unix_time)+0000/`,
+      |   intervalEnd: `/Date(unix_time + 86340000)+0000/`,
+      |   roundStart: `/Date(unix_time)+0000/`,
+      |   roundEnd: `/Date(unix_time + 86340000)+0000/`,
+      |   adult: Integer,
+      |   child: Integer,
+      |   productClass: enum([
+      |     null, // All
+      |     "S",  // Smart
+      |     "P",  // Prima
+      |     "T",  // Comfort
+      |     "C",  // Club
+      |   ]),
+      |   classOfService: enum([
+      |     null, // All
+      |     "H",  // Smart - Promo
+      |     "U",  // Smart - Low Cost
+      |     "T",  // Smart - Economy
+      |     "N",  // Smart - Flex
+      |     "B1", // Prima - Low Cost
+      |     "M1", // Prima - Economy
+      |     "G",  // Prima - Flex
+      |     "S",  // Comfort - Low Cost
+      |     "F",  // Comfort - Economy
+      |     "Z",  // Comfort - Flex
+      |     "X",  // Class - Economy
+      |     "A",  // Class - Flex
+      |   ]),
+      |   promoCode: String
+      | }
+      |
+      | Response {
+      | }
