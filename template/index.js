@@ -190,6 +190,7 @@ promo_code=${promo_code}&
 pax_price=${paxPriceFilter.value}
     `;
   }
+  generateLink();
 
   function priceFilter(journeys) {
     if (journeys) {
