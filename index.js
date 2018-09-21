@@ -29,7 +29,36 @@ app.set('views', './template')
 app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {
-  res.render('index');
+  const {
+    username,
+    password,
+    depart,
+    arrival,
+    is_round,
+    interval_start,
+    round_start,
+    adult,
+    child,
+    class_lv,
+    service,
+    promo_code,
+    pax_price,
+  } = req.query;
+  res.render('index', {
+    username,
+    password,
+    depart,
+    arrival,
+    is_round,
+    interval_start,
+    round_start,
+    adult,
+    child,
+    class_lv,
+    service,
+    promo_code,
+    pax_price,
+  });
 });
 
 app.get('/apidoc', (req, res) => {
@@ -42,8 +71,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/getAvailableTrains', async (req, res) => {
-  const { Signature: sig } = await query.login();
-  const json = await query.getAvailableTrains({ sig, ...req.body });
+  const json = await query.getAvailableTrains(req.body);
   res.send(JSON.stringify(json));
 });
 

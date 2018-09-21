@@ -1,40 +1,7 @@
-input {
-  outline: none;
-}
-
-span {
-  margin: 5px;
-}
-
-p {
-  margin: 0;
-}
-
 p:hover {
   background: #eee;
 }
 
-#round_trip > input {
-  cursor: pointer;
-}
-
-#round_trip > label {
-  cursor: pointer;
-  user-select: none;
-  margin: 5px;
-}
-
 #return_date {
   display: none;
-}
-
-#form {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-#pax_price_filter {
-  width: 50px;
 }

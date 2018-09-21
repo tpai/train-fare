@@ -3,54 +3,66 @@ html
   head
     title Train Fare
     link(href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet')
-    link(href='https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.css' rel='stylesheet')
     style
       include ./styles.css
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css' rel='stylesheet')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.21/moment-timezone-with-data-2012-2022.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/async/2.6.1/async.min.js')
   body
-    form(id="form")
-      div
-        span From
-        input(type="text" name="depart" id="depart")
-        span To
-        input(type="text" name="arrival" id="arrival")
-      div(id="round_trip")
-        label(for="is_round") Round Trip
-        input(type="checkbox" name="is_round" id="is_round")
-      div(id="depart_date")
-        span Depart Date
-        input(type="date" name="interval_start")
-      div(id="return_date")
-        span Return Date
-        input(type="date" name="round_start")
-      div
-        span Adult
-        select(name="adult" id="adult")
-          each variable in [1,2,3,4,5,6,7,8,9]
-            option(value=variable) #{variable}
-        span Child
-        select(name="child" id="child")
-          each variable in [0,1,2,3,4,5,6,7,8,9]
-            option(value=variable) #{variable}
-      div
-        span Class
-        select(name="class" id="class")
-          each variable in [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"}]
-            option(value=variable.value) #{variable.label}
-        span Service
-        select(name="service" id="service")
-      div
-        span
-        input(type="text" placeholder="Promo Code" name="promo_code" id="promo_code")
-      div
-        span
-        input(type="button" id="submit" value="Search")
-    br
-    div
-      span Pax Price Filter
-      input(type="number" name="pax_price_filter" id="pax_price_filter" value="50.00" step="0.01")
-      pre(id="result")
+    div.ts.eight.column.very.narrow.container.segment
+      form.ts.form(id="form")
+        div.field
+          label Username
+          input(name="username" id="username" value=username)
+        div.field
+          label Password
+          input(type="password" name="password" id="password" value=password)
+        div.ts.separated.dropdowns.field
+          div.divider From
+          select.ts.basic.dropdown(name="depart" id="depart")
+            each ele in [{"value":"BC_","label":"Bologna"},{"value":"BLZ","label":"Bolzano"},{"value":"BSC","label":"Brescia"},{"value":"DSG","label":"Desenzano"},{"value":"F__","label":"Ferrara"},{"value":"SMN","label":"Firenze SMN"},{"value":"MI0","label":"Milano (Tutte)"},{"value":"MC_","label":"Milano Centrale"},{"value":"RRO","label":"Milano Rho Fiera"},{"value":"RG_","label":"Milano Rog"},{"value":"NAF","label":"Napoli Afragola"},{"value":"NAC","label":"Napoli C.le"},{"value":"PD_","label":"Padova"},{"value":"PSY","label":"Peschiera"},{"value":"AAV","label":"Reggio Emilia AV"},{"value":"RM0","label":"Roma (Tutte)"},{"value":"RMT","label":"Roma Termini"},{"value":"RTB","label":"Roma Tib"},{"value":"RVR","label":"Rovereto"},{"value":"R__","label":"Rovigo"},{"value":"SAL","label":"Salerno"},{"value":"TOP","label":"Torino P.Nuova"},{"value":"OUE","label":"Torino P.Susa"},{"value":"TCN","label":"Trento"},{"value":"VE0","label":"Venezia (Tutte)"},{"value":"VEM","label":"Venezia Mestre"},{"value":"VSL","label":"Venezia S.Lucia"},{"value":"VPN","label":"Verona P.N."},{"value":"VIC","label":"Vicenza"}]
+              option(value=ele.value selected=ele.value == depart) #{ele.label}
+          div.divider To
+          select.ts.basic.dropdown(name="arrival" id="arrival")
+            each ele in [{"value":"BC_","label":"Bologna"},{"value":"BLZ","label":"Bolzano"},{"value":"BSC","label":"Brescia"},{"value":"DSG","label":"Desenzano"},{"value":"F__","label":"Ferrara"},{"value":"SMN","label":"Firenze SMN"},{"value":"MI0","label":"Milano (Tutte)"},{"value":"MC_","label":"Milano Centrale"},{"value":"RRO","label":"Milano Rho Fiera"},{"value":"RG_","label":"Milano Rog"},{"value":"NAF","label":"Napoli Afragola"},{"value":"NAC","label":"Napoli C.le"},{"value":"PD_","label":"Padova"},{"value":"PSY","label":"Peschiera"},{"value":"AAV","label":"Reggio Emilia AV"},{"value":"RM0","label":"Roma (Tutte)"},{"value":"RMT","label":"Roma Termini"},{"value":"RTB","label":"Roma Tib"},{"value":"RVR","label":"Rovereto"},{"value":"R__","label":"Rovigo"},{"value":"SAL","label":"Salerno"},{"value":"TOP","label":"Torino P.Nuova"},{"value":"OUE","label":"Torino P.Susa"},{"value":"TCN","label":"Trento"},{"value":"VE0","label":"Venezia (Tutte)"},{"value":"VEM","label":"Venezia Mestre"},{"value":"VSL","label":"Venezia S.Lucia"},{"value":"VPN","label":"Verona P.N."},{"value":"VIC","label":"Vicenza"}]
+              option(value=ele.value selected=ele.value == arrival) #{ele.label}
+          div.ts.checkbox(id="round_trip")
+            input(type="checkbox" name="is_round" id="is_round" checked=is_round=="true")
+            label(for="is_round") Round Trip
+        div.field(id="depart_date")
+          label Depart Date
+          input(type="date" name="interval_start" value=interval_start)
+        div.field(id="return_date" style=is_round == "true" ? "display: block" : "display: none")
+          label Return Date
+          input(type="date" name="round_start" value=round_start)
+        div.ts.separated.dropdowns.field
+          div.divider Adult
+          select.ts.basic.dropdown(name="adult" id="adult")
+            each val in [1,2,3,4,5,6,7,8,9]
+              option(value=val selected=val == adult) #{val}
+          div.divider Child
+          select.ts.basic.dropdown(name="child" id="child")
+            each val in [0,1,2,3,4,5,6,7,8,9]
+              option(value=val selected=val == child) #{val}
+          div.divider Class
+          select.ts.basic.dropdown(name="class" id="class")
+            each ele in [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"}]
+              option(value=ele.value selected=ele.value == class_lv) #{ele.label}
+          div.divider Service
+          select.ts.basic.dropdown(name="service" id="service")
+            each ele in [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null,belongsTo:"P"},{label:"All",value:null,belongsTo:"T"},{label:"All",value:null,belongsTo:"C"},{label:"All",value:null,belongsTo:"O"},{label:"Promo",value:"H",belongsTo:"S"},{label:"Low Cost",value:"U",belongsTo:"S"},{label:"Economy",value:"T",belongsTo:"S"},{label:"Flex",value:"N",belongsTo:"S"},{label:"Low Cost",value:"B1",belongsTo:"P"},{label:"Economy",value:"M1",belongsTo:"P"},{label:"Flex",value:"G",belongsTo:"P"},{label:"Low Cost",value:"S",belongsTo:"T"},{label:"Economy",value:"F",belongsTo:"T"},{label:"Flex",value:"Z",belongsTo:"T"},{label:"Economy",value:"X",belongsTo:"C"},{label:"Flex",value:"A",belongsTo:"C"}]
+              if ele.belongsTo == class_lv
+                option(value=ele.value selected="true")
+        div.field
+          input(type="text" placeholder="Promo Code" name="promo_code" id="promo_code" value=promo_code)
+        div.field
+          input.ts.primary.button(type="button" id="submit" value="Search")
+        div.field
+          input(type="text" id="link")
+        div.field
+          label Pax Price Lower Than
+          input(type="number" name="pax_price_filter" id="pax_price_filter" value=pax_price ? pax_price : "30.00" step="0.10" onkeydown="if(event.keyCode === 13)return false;")
+    pre.ts.eight.column.very.narrow.container(id="result")
     script
       include ./index.js

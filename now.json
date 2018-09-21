@@ -4,8 +4,6 @@
   "env": {
     "API_ENDPOINT": "",
     "API_LOGIN_PATH": "",
-    "API_QUERY_PATH": "",
-    "USERNAME": "",
-    "PASSWORD": ""
+    "API_QUERY_PATH": ""
   }
 }

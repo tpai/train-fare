@@ -3,7 +3,7 @@ require('dotenv').config();
 const fetch = require('isomorphic-fetch');
 
 module.exports = {
-  login: ({ username, password }) => {
+  login: ({ username = '', password = '' }) => {
     return fetch(`${process.env.API_ENDPOINT}${process.env.API_LOGIN_PATH}`, {
       method: 'POST',
       headers: {
@@ -11,8 +11,8 @@ module.exports = {
       },
       body: JSON.stringify({
         "Login": {
-          "Username": `${username || process.env.USERNAME}`,
-          "Password": `${password || process.env.PASSWORD}`,
+          "Username": `${username}`,
+          "Password": `${password}`,
           "Domain": "WWW"
         },
         "SourceSystem": 3

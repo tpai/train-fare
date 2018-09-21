@@ -20,9 +20,6 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
   window.onload = () => depart.focus();
 
-  new Awesomplete(depart, { list: stations, minChars: 1 });
-  new Awesomplete(arrival, { list: stations, minChars: 1 });
-
   const classSelector = document.querySelector('#class');
   const serviceSelector = document.querySelector('#service');
 
@@ -33,7 +30,10 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
   const form = document.querySelector('#form');
   const submit = document.querySelector('#submit');
+  const link = document.querySelector('#link');
   const result = document.querySelector('#result');
+  const username = document.querySelector('#username');
+  const password = document.querySelector('#password');
   const startQuery = () => {
     const {
       depart,
@@ -83,31 +83,45 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
     result.innerHTML = 'Loading...';
 
-    fetch('/api/getAvailableTrains', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
+    async.waterfall([
+      function (callback) {
+        fetch('/api/login', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            username: username.value,
+            password: password.value,
+          }),
+        })
+          .then(res => res.json())
+          .then(({ Signature }) => callback(null, Signature));
       },
-      body: JSON.stringify(body),
-    })
-      .then(res => res.json())
-      .then(({ JourneyDateMarkets }) => {
-        if (JourneyDateMarkets && JourneyDateMarkets.length > 0) {
-          const journeys = JourneyDateMarkets[0].Journeys.filter(({ Segments }) => Segments[0].Fares !== null);
-          const filteredJourneys = priceFilter(journeys);
-          result.innerHTML = generateHTML(filteredJourneys);
-          backup = journeys;
-        } else {
-          result.innerHTML = 'No result.';
-        }
-      });
+      function (sig, callback) {
+        fetch('/api/getAvailableTrains', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ sig, ...body }),
+        })
+          .then(res => res.json())
+          .then(json => callback(null, json));
+      },
+    ], (err, { JourneyDateMarkets }) => {
+      if (JourneyDateMarkets && JourneyDateMarkets.length > 0) {
+        const journeys = JourneyDateMarkets[0].Journeys.filter(({ Segments }) => Segments[0].Fares !== null);
+        const filteredJourneys = priceFilter(journeys);
+        result.innerHTML = generateHTML(filteredJourneys);
+        backup = journeys;
+      } else {
+        result.innerHTML = 'No result.';
+      }
+    });
   };
   bindSubmit(form);
   submit.addEventListener('click', startQuery);
 
   const paxPriceFilter = document.querySelector('#pax_price_filter');
 
-  paxPriceFilter.addEventListener('change', () => {
+  paxPriceFilter.addEventListener('keyup', () => {
     result.innerHTML = generateHTML(priceFilter(backup));
   });
 
@@ -140,21 +154,57 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
           startQuery();
         }
       });
+      element.addEventListener('change', e => {
+        generateLink();
+      });
     }
   }
 
+  function generateLink() {
+    const {
+      username,
+      password,
+      depart,
+      arrival,
+      is_round,
+      interval_start,
+      round_start,
+      adult,
+      child,
+      class: class_lv,
+      service,
+      promo_code,
+    } = toJSON(form);
+    link.value = `${location.protocol}//${location.host}/?
+username=${username}&
+password=${password}&
+depart=${depart}&
+arrival=${arrival}&
+interval_start=${interval_start}&
+round_start=${round_start}&
+adult=${adult}&
+child=${child}&
+class_lv=${class_lv}&
+service=${service}&
+promo_code=${promo_code}&
+pax_price=${paxPriceFilter.value}
+    `;
+  }
+
   function priceFilter(journeys) {
-    const filteredJourneysWithEmptyArray = journeys.map(({ Segments, ...keys }) => {
-      return {
-        Segments: [{
-          Fares: Segments[0].Fares.filter(({ PaxFares }) =>
-            JSON.parse(paxPriceFilter.value) > PaxFares[0].DiscountedPaxFarePrice
-          ),
-        }],
-        ...keys,
-      };
-    });
-    return filteredJourneysWithEmptyArray.filter(journey => journey.Segments[0].Fares.length > 0);
+    if (journeys) {
+      const filteredJourneysWithEmptyArray = journeys.map(({ Segments, ...keys }) => {
+        return {
+          Segments: [{
+            Fares: Segments[0].Fares.filter(({ PaxFares }) =>
+              JSON.parse(paxPriceFilter.value) > PaxFares[0].DiscountedPaxFarePrice
+            ),
+          }],
+          ...keys,
+        };
+      });
+      return filteredJourneysWithEmptyArray.filter(journey => journey.Segments[0].Fares.length > 0);
+    }
   }
 
   function generateHTML(journeys) {
