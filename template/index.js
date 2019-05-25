@@ -1,4 +1,5 @@
 const stations = [{"value":"BC_","label":"Bologna"},{"value":"BLZ","label":"Bolzano"},{"value":"BSC","label":"Brescia"},{"value":"DSG","label":"Desenzano"},{"value":"F__","label":"Ferrara"},{"value":"SMN","label":"Firenze SMN"},{"value":"MI0","label":"Milano (Tutte)"},{"value":"MC_","label":"Milano Centrale"},{"value":"RRO","label":"Milano Rho Fiera"},{"value":"RG_","label":"Milano Rog"},{"value":"NAF","label":"Napoli Afragola"},{"value":"NAC","label":"Napoli C.le"},{"value":"PD_","label":"Padova"},{"value":"PSY","label":"Peschiera"},{"value":"AAV","label":"Reggio Emilia AV"},{"value":"RM0","label":"Roma (Tutte)"},{"value":"RMT","label":"Roma Termini"},{"value":"RTB","label":"Roma Tib"},{"value":"RVR","label":"Rovereto"},{"value":"R__","label":"Rovigo"},{"value":"SAL","label":"Salerno"},{"value":"TOP","label":"Torino P.Nuova"},{"value":"OUE","label":"Torino P.Susa"},{"value":"TCN","label":"Trento"},{"value":"VE0","label":"Venezia (Tutte)"},{"value":"VEM","label":"Venezia Mestre"},{"value":"VSL","label":"Venezia S.Lucia"},{"value":"VPN","label":"Verona P.N."},{"value":"VIC","label":"Vicenza"}];
+const classes = [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"}];
 const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null,belongsTo:"P"},{label:"All",value:null,belongsTo:"T"},{label:"All",value:null,belongsTo:"C"},{label:"All",value:null,belongsTo:"O"},{label:"Promo",value:"H",belongsTo:"S"},{label:"Low Cost",value:"U",belongsTo:"S"},{label:"Economy",value:"T",belongsTo:"S"},{label:"Flex",value:"N",belongsTo:"S"},{label:"Low Cost",value:"B1",belongsTo:"P"},{label:"Economy",value:"M1",belongsTo:"P"},{label:"Flex",value:"G",belongsTo:"P"},{label:"Low Cost",value:"S",belongsTo:"T"},{label:"Economy",value:"F",belongsTo:"T"},{label:"Flex",value:"Z",belongsTo:"T"},{label:"Economy",value:"X",belongsTo:"C"},{label:"Flex",value:"A",belongsTo:"C"}];
 
 (function() {
@@ -40,6 +41,11 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
   share.addEventListener('click', () => alert('Link copied!'));
 
   const startQuery = () => {
+    if (username.value === '' || password === '') {
+      alert('You must provide Italo username and password for searching.\n\nNotice: Your account information is only use for querying available train, please do not use if have any concern.');
+      return;
+    }
+
     const {
       depart,
       arrival,
@@ -86,7 +92,12 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
       promoCode: promo_code === '' ? null : promo_code,
     };
 
-    result.innerHTML = 'Loading...';
+    result.style.display = 'block';
+    result.innerHTML = `
+    <div class="ts active inverted dimmer">
+      <div class="ts text loader">Loading...</div>
+    </div>
+    `;
 
     async.waterfall([
       function (callback) {
@@ -118,7 +129,7 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
           .then(json => callback(null, json));
       },
     ], (err, { JourneyDateMarkets }) => {
-      if (JourneyDateMarkets && JourneyDateMarkets.length > 0) {
+      if (JourneyDateMarkets && JourneyDateMarkets.length > 0 && JourneyDateMarkets[0].Journeys !== null) {
         const journeys = JourneyDateMarkets[0].Journeys.filter(({ Segments }) => Segments[0].Fares !== null);
         const filteredJourneys = priceFilter(journeys);
         result.innerHTML = generateHTML(filteredJourneys);
@@ -222,6 +233,7 @@ pax_price=${paxPriceFilter.value}`.replace(/\r?\n|\r/g, '')
     return journeys.map(({ JourneySellKey, Segments }) => {
       return Segments[0].Fares.map(({
         ClassOfService,
+        ClassOfServiceName,
         ProductClass,
         AvailableCount,
         FullFarePrice,
@@ -234,8 +246,55 @@ pax_price=${paxPriceFilter.value}`.replace(/\r?\n|\r/g, '')
           FullPaxFarePrice,
           DiscountedPaxFarePrice,
         } = PaxFares[0];
-        return `<p>${JourneySellKey} | [${ProductClass}][${ClassOfService}] | ${AvailableCount === 0 ? 'N' : AvailableCount} seats | €${FullPaxFarePrice > DiscountedPaxFarePrice ? `<span style='color: red;'>${DiscountedPaxFarePrice}</span>` : FullPaxFarePrice} | €${FullFarePrice > DiscountedFarePrice ? `<span style='color: red;'>${DiscountedFarePrice}</span>` : FullFarePrice} | ${PaxDiscountCode} ${FareDiscountCode}</p>`;
+        const [depart, arrival] = JourneySellKey.match(/~([A-Z_]{3})~/g);
+        const [start, end] = JourneySellKey.match(/~\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}~/g);
+        return `
+          <div class="row">
+            <div>
+              ${normalizeDate(start).date}
+            </div>
+            <div>
+              ${normalizeDate(start).time}
+            </div>
+            <div>
+              ${normalizeDate(end).date}
+            </div>
+            <div>
+              ${normalizeDate(end).time}
+            </div>
+            <div class="desktop-only">
+              ${mapClassById(ProductClass)}
+            </div>
+            <div class="mobile-only">
+              ${ProductClass}
+            </div>
+            <div class="desktop-only">
+              ${ClassOfServiceName}
+            </div>
+            <div class="mobile-only">
+              ${ClassOfService}
+            </div>
+            <div>
+              ${AvailableCount === 0 ? 'N' : AvailableCount} Seats
+            </div>
+            <div>
+              ${FullFarePrice > DiscountedFarePrice ? `<span style='color: red;'>${DiscountedFarePrice}</span>` : FullFarePrice}€
+            </div>
+          </div>`
+        ;
       }).join('');
-    }).join('')
+    }).join('');
+  }
+
+  function mapStationById (id) {
+    return stations.find(station => `~${station.value}~` === id).label;
+  }
+  function mapClassById (id) {
+    return classes.find(theClass => theClass.value === id).label;
+  }
+  function normalizeDate (dateString) {
+    const { groups: { date }} = dateString.match(/~(?<date>\d{2}\/\d{2}\/\d{4})/);
+    const { groups: { time }} = dateString.match(/(?<time>\d{2}:\d{2})~/);
+    return { date, time };
   }
 })();
