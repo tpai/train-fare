@@ -5,3 +5,60 @@ p:hover {
 #return_date {
   display: none;
 }
+
+#result {
+  display: none;
+  min-height: 100px;
+}
+
+select:invalid {
+  color: rgba(40,50,80,.38) !important;
+}
+
+.date {
+  font-size: 16px;
+}
+
+.station {
+  margin: .5rem;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.time {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.row:hover {
+  background: #eee;
+}
+
+.row > div {
+  flex: 1;
+}
+
+.desktop-only {
+  display: table-cell;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: table-cell;
+  }
+}
