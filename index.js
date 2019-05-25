@@ -3,7 +3,11 @@ const app = express();
 const http = require('http').createServer(app);
 const port = process.env.PORT || 8000;
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const query = require('./query');
+
+// put on helmet
+app.use(helmet());
 
 // parse json
 app.use(bodyParser.json());
