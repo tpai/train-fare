@@ -30,10 +30,14 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
   const form = document.querySelector('#form');
   const submit = document.querySelector('#submit');
-  const link = document.querySelector('#link');
+  const share = document.querySelector('#share');
   const result = document.querySelector('#result');
   const username = document.querySelector('#username');
   const password = document.querySelector('#password');
+
+  new ClipboardJS(share);
+  share.addEventListener('click', () => alert('Link copied!'));
+
   const startQuery = () => {
     const {
       depart,
@@ -175,9 +179,7 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
       service,
       promo_code,
     } = toJSON(form);
-    link.value = `${location.protocol}//${location.host}/?
-username=${username}&
-password=${password}&
+    share.setAttribute('data-clipboard-text', `${location.protocol}//${location.host}/?
 depart=${depart}&
 arrival=${arrival}&
 interval_start=${interval_start}&
@@ -187,8 +189,8 @@ child=${child}&
 class_lv=${class_lv}&
 service=${service}&
 promo_code=${promo_code}&
-pax_price=${paxPriceFilter.value}
-    `;
+pax_price=${paxPriceFilter.value}`.replace(/\r?\n|\r/g, '')
+    );
   }
   generateLink();
 
