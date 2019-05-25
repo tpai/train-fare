@@ -3,6 +3,7 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
 (function() {
   let backup;
+  let sig;
 
   const isRound = document.querySelector('#is_round');
   const returnDate = document.querySelector('#return_date');
@@ -89,6 +90,10 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
 
     async.waterfall([
       function (callback) {
+        if (sig) {
+          callback(null, sig);
+          return;
+        }
         fetch('/api/login', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -98,7 +103,10 @@ const services = [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null
           }),
         })
           .then(res => res.json())
-          .then(({ Signature }) => callback(null, Signature));
+          .then(({ Signature }) => {
+            sig = Signature;
+            callback(null, Signature);
+          });
       },
       function (sig, callback) {
         fetch('/api/getAvailableTrains', {
