@@ -4,7 +4,7 @@ const fetch = require('isomorphic-fetch');
 
 module.exports = {
   login: ({ username = '', password = '' }) => {
-    return fetch(`${process.env.API_ENDPOINT}${process.env.API_LOGIN_PATH}`, {
+    return fetch(`${process.env.API_HOSTNAME}${process.env.API_LOGIN_PATH}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -34,7 +34,7 @@ module.exports = {
     promoCode = null,
     sig = '',
   }) => {
-    return fetch(`${process.env.API_ENDPOINT}${process.env.API_QUERY_PATH}`, {
+    return fetch(`${process.env.API_HOSTNAME}${process.env.API_QUERY_PATH}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
