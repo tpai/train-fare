@@ -2,18 +2,21 @@ require('dotenv').config();
 
 const fetch = require('isomorphic-fetch');
 
+const { API_HOSTNAME, API_LOGIN_PATH, API_QUERY_PATH, USERNAME, PASSWORD } = process.env;
+
 module.exports = {
-  login: ({ username = '', password = '' }) => {
-    return fetch(`${process.env.API_HOSTNAME}${process.env.API_LOGIN_PATH}`, {
+  login: () => {
+    return fetch(`${API_HOSTNAME}${API_LOGIN_PATH}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
         "Login": {
-          "Username": `${username}`,
-          "Password": `${password}`,
-          "Domain": "WWW"
+          "Username": `${USERNAME}`,
+          "Password": `${PASSWORD}`,
+          "Domain": "WWW",
+          "VersionNumber":"3.4.5"
         },
         "SourceSystem": 3
       }),
@@ -34,7 +37,7 @@ module.exports = {
     promoCode = null,
     sig = '',
   }) => {
-    return fetch(`${process.env.API_HOSTNAME}${process.env.API_QUERY_PATH}`, {
+    return fetch(`${API_HOSTNAME}${API_QUERY_PATH}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'

@@ -69,13 +69,12 @@ app.get('/apidoc', (req, res) => {
   res.render('apidoc');
 });
 
-app.post('/api/login', async (req, res) => {
-  const json = await query.login(req.body);
-  res.send(JSON.stringify(json));
-});
-
 app.post('/api/getAvailableTrains', async (req, res) => {
-  const json = await query.getAvailableTrains(req.body);
+  const { Signature } = await query.login();
+  const json = await query.getAvailableTrains({
+    ...req.body,
+    sig: Signature,
+  });
   res.send(JSON.stringify(json));
 });
 
