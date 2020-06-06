@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Train Fare
+    title Italo Train Fare
     meta(name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
     link(href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet')
     style
@@ -13,14 +13,9 @@ html
     script(src='https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js')
   body
     div.ts.very.narrow.container
-      h2.ts.header Train Fare
+      h2.ts.header Italo Train Fare
     div.ts.eight.column.very.narrow.container.segment
       form.ts.form(id="form")
-        div.two.fields
-          div.field
-            input(name="username" id="username" value=username placeholder="Username")
-          div.field
-            input(type="password" name="password" id="password" value=password placeholder="Password")
         div.ts.separated.dropdowns.field
           div.divider From
           select.ts.basic.dropdown(name="depart" id="depart")
@@ -42,23 +37,23 @@ html
             input(type="date" name="round_start" value=round_start)
         div.four.fields
           div.field
-            select.ts.basic.dropdown(name="adult" id="adult" required)
-              option(value="" disabled selected) Adult
+            select.ts.basic.dropdown(name="adult" id="adult" value="1" required)
+              option(value="" disabled) Adult
               each val in [1,2,3,4,5,6,7,8,9]
                 option(value=val selected=val == adult) #{val}
           div.field
-            select.ts.basic.dropdown(name="child" id="child" required)
-              option(value="" disabled selected) Child
+            select.ts.basic.dropdown(name="child" id="child" value="0" required)
+              option(value="" disabled) Child
               each val in [0,1,2,3,4,5,6,7,8,9]
                 option(value=val selected=val == child) #{val}
           div.field
-            select.ts.basic.dropdown(name="class" id="class" required)
-              option(value="" disabled selected) Class
-              each ele in [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"}]
+            select.ts.basic.dropdown(name="class" id="class" value="all" required)
+              option(value="" disabled) Class
+              each ele in [{label:"All",value:"O"},{label:"Smart",value:"S"},{label:"Prima",value:"P"},{label:"Comfort",value:"T"},{label:"Club",value:"C"},{label:"Salotto 1",value:"S1"},{label:"Salotto 2",value:"S2"}]
                 option(value=ele.value selected=ele.value == class_lv) #{ele.label}
           div.field
             select.ts.basic.dropdown(name="service" id="service" required)
-              each ele in [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null,belongsTo:"P"},{label:"All",value:null,belongsTo:"T"},{label:"All",value:null,belongsTo:"C"},{label:"All",value:null,belongsTo:"O"},{label:"Promo",value:"H",belongsTo:"S"},{label:"Low Cost",value:"U",belongsTo:"S"},{label:"Economy",value:"T",belongsTo:"S"},{label:"Flex",value:"N",belongsTo:"S"},{label:"Low Cost",value:"B1",belongsTo:"P"},{label:"Economy",value:"M1",belongsTo:"P"},{label:"Flex",value:"G",belongsTo:"P"},{label:"Low Cost",value:"S",belongsTo:"T"},{label:"Economy",value:"F",belongsTo:"T"},{label:"Flex",value:"Z",belongsTo:"T"},{label:"Economy",value:"X",belongsTo:"C"},{label:"Flex",value:"A",belongsTo:"C"}]
+              each ele in [{label:"All",value:null,belongsTo:"S"},{label:"All",value:null,belongsTo:"P"},{label:"All",value:null,belongsTo:"T"},{label:"All",value:null,belongsTo:"C"},{label:"All",value:null,belongsTo:"O"},{label:"Promo",value:"H",belongsTo:"S"},{label:"Low Cost",value:"U",belongsTo:"S"},{label:"Economy",value:"T",belongsTo:"S"},{label:"Flex",value:"N",belongsTo:"S"},{label:"Low Cost",value:"B1",belongsTo:"P"},{label:"Economy",value:"M1",belongsTo:"P"},{label:"Flex",value:"G",belongsTo:"P"},{label:"Low Cost",value:"S",belongsTo:"T"},{label:"Economy",value:"F",belongsTo:"T"},{label:"Flex",value:"Z",belongsTo:"T"},{label:"Economy",value:"X",belongsTo:"C"},{label:"Flex",value:"A",belongsTo:"C"},{label:"Flex",value:"W0",belongsTo:"S1"},{label:"Flex",value:"Y0",belongsTo:"S2"}]
                 if ele.belongsTo == class_lv
                   option(value=ele.value selected="true")
         div.three.fields
@@ -70,7 +65,7 @@ html
             input.ts.positive.button(type="button" id="share" value="Share")
         div.field
           label Price Lower Than
-          input(type="number" name="pax_price_filter" id="pax_price_filter" value=pax_price ? pax_price : "50.00" step="0.10" onkeydown="if(event.keyCode === 13)return false;")
+          input(type="number" name="pax_price_filter" id="pax_price_filter" value=pax_price ? pax_price : "300.00" step="0.10" onkeydown="if(event.keyCode === 13)return false;")
     div.ts.very.narrow.container(id="result")
     script
       include ./index.js

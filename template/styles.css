@@ -6,11 +6,6 @@ p:hover {
   display: none;
 }
 
-#result {
-  display: none;
-  min-height: 100px;
-}
-
 select:invalid {
   color: rgba(40,50,80,.38) !important;
 }
@@ -30,18 +25,12 @@ select:invalid {
   font-weight: bold;
 }
 
-.row {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
 .row:hover {
   background: #eee;
 }
 
 .row > div {
+  font-family: monospace;
   flex: 1;
 }
 
@@ -59,6 +48,6 @@ select:invalid {
   }
 
   .mobile-only {
-    display: table-cell;
+    display: table-row;
   }
 }
